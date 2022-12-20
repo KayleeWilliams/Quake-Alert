@@ -11,6 +11,10 @@
 		CC52AC042952475800F9DFFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC032952475800F9DFFA /* ContentView.swift */; };
 		CC52AC062952475A00F9DFFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC52AC052952475A00F9DFFA /* Assets.xcassets */; };
 		CC52AC092952475A00F9DFFA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC52AC082952475A00F9DFFA /* Preview Assets.xcassets */; };
+		CC52AC10295247A700F9DFFA /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC0F295247A700F9DFFA /* ListView.swift */; };
+		CC52AC122952487600F9DFFA /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC112952487600F9DFFA /* MapView.swift */; };
+		CC52AC142952524000F9DFFA /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC132952524000F9DFFA /* APIClient.swift */; };
+		CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC152952533200F9DFFA /* SummaryModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		CC52AC032952475800F9DFFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CC52AC052952475A00F9DFFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC52AC082952475A00F9DFFA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CC52AC0F295247A700F9DFFA /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		CC52AC112952487600F9DFFA /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		CC52AC132952524000F9DFFA /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		CC52AC152952533200F9DFFA /* SummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +60,11 @@
 			isa = PBXGroup;
 			children = (
 				CC52AC012952475800F9DFFA /* earthquakeApp.swift */,
+				CC52AC132952524000F9DFFA /* APIClient.swift */,
+				CC52AC152952533200F9DFFA /* SummaryModel.swift */,
 				CC52AC032952475800F9DFFA /* ContentView.swift */,
+				CC52AC0F295247A700F9DFFA /* ListView.swift */,
+				CC52AC112952487600F9DFFA /* MapView.swift */,
 				CC52AC052952475A00F9DFFA /* Assets.xcassets */,
 				CC52AC072952475A00F9DFFA /* Preview Content */,
 			);
@@ -138,7 +150,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC52AC042952475800F9DFFA /* ContentView.swift in Sources */,
+				CC52AC122952487600F9DFFA /* MapView.swift in Sources */,
+				CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */,
 				CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */,
+				CC52AC142952524000F9DFFA /* APIClient.swift in Sources */,
+				CC52AC10295247A700F9DFFA /* ListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

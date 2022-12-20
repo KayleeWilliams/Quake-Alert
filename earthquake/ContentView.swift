@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  Pages.swift
 //  earthquake
 //
 //  Created by Kaylee Williams on 20/12/2022.
@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var apiClient = APIClient()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        TabView {
+            ListView()
+                .environmentObject(apiClient)
+                .tabItem {Label("", systemImage: "list.bullet")}
+            
+            MapView()
+                .tabItem {
+                    Label("", systemImage: "map")
+                }
         }
-        .padding()
     }
 }
 

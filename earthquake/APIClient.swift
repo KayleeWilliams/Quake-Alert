@@ -19,19 +19,21 @@ class APIClient: ObservableObject {
         }
     }
     
-    func getLocation(coords: [Double], completion: (([String]?) -> Void)?) {
+    func getLocation(coords: [Double], completion: ((String?, String?, String?) -> Void)?) {
         let location = CLLocation(latitude: coords[1], longitude: coords[0])
 
         CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
-            guard let placemark = placemarks?.first,
-                  let country = placemark.country,
-                  let city = placemark.locality
-            else {
-                completion!(nil)
-                return
-            }
+            var city: String?
+            var country: String?
+            var countryCode: String?
 
-            completion!(["\(city)", "\(country)"])
+            if let placemark = placemarks?.first {
+                city = placemark.locality
+                country = placemark.country
+                countryCode = placemark.isoCountryCode
+            }
+            
+            completion?(city, country, countryCode)
         }
     }
     

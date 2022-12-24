@@ -12,14 +12,14 @@ import SwiftUI
 struct RootView: View {
     @StateObject var apiClient = APIClient()
     @State var selectedTab = Tabs .timeline
-    
+
     var body: some View {
         VStack {
             if selectedTab == .timeline {
                 ListView()
                     .environmentObject(apiClient)
             } else if selectedTab == .map {
-                MapView(selectedFeature: nil)
+                MapView(selectedFeature: nil, apiClient: apiClient)
                     .environmentObject(apiClient)
             }
             Spacer()

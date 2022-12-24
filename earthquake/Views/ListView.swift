@@ -10,13 +10,13 @@ import SwiftUI
 
 struct ListView: View {
     @EnvironmentObject var api: APIClient
-    
+
     var body: some View {
         NavigationView {
             if let features = api.quakeSummary?.features {
                 List(features.indices, id: \.self) { index in
                     NavigationLink {
-                        MapView(selectedFeature: features[index])
+                        MapView(selectedFeature: features[index], apiClient: api)
                             .environmentObject(api)
                     } label: {
                         EarthquakeItem(feature: features[index])
@@ -55,13 +55,13 @@ struct EarthquakeItem: View {
         return "\(time) (\(intervalString) ago)"
     }
         
-    func getCountry() {
-        api.getLocation(coords: (feature.geometry?.coordinates)!) { res in
-            if res != nil {
-                self.title = "\((res?[0])!), \((res?[1])!)"
-            }
-        }
-    }
+//    func getCountry() {
+//        api.getLocation(coords: (feature.geometry?.coordinates)!) { res in
+//            if res != nil {
+//                self.title = "\((res?[0])!), \((res?[1])!)"
+//            }
+//        }
+//    }
     
     var body: some View {
         HStack() {

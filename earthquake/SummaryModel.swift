@@ -15,7 +15,7 @@ struct SummaryModel: Codable {
 }
 
 // MARK: - Feature
-struct Feature: Codable {
+struct Feature: Codable, Identifiable {
     let type: FeatureType?
     let properties: Properties?
     let geometry: Geometry?

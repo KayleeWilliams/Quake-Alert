@@ -36,7 +36,7 @@ class APIClient: ObservableObject {
     }
     
     func fetchQuakeSummary(completion: @escaping (SummaryModel?) -> Void) {
-        let url = URL(string: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson")
+        let url = URL(string: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_day.geojson")
         self.fetch(url: url!) { json in
             let decoder = JSONDecoder()
             do {

@@ -16,7 +16,8 @@ struct ListView: View {
             if let features = api.quakeSummary?.features {
                 List(features.indices, id: \.self) { index in
                     NavigationLink {
-                        MapView()
+                        MapView(selectedFeature: features[index])
+                            .environmentObject(api)
                     } label: {
                         EarthquakeItem(feature: features[index])
                             .environmentObject(api)
@@ -76,7 +77,7 @@ struct EarthquakeItem: View {
                 .frame(width: 24, height: 18)
             VStack(alignment: .leading) {
                 Text(self.title)
-                    .onAppear{getCountry()}
+//                    .onAppear{getCountry()}
                     .fontWeight(.semibold)
                 
                 Text((feature.properties?.place!)!)

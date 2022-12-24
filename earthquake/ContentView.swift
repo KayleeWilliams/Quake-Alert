@@ -16,7 +16,8 @@ struct ContentView: View {
                 .environmentObject(apiClient)
                 .tabItem {Label("", systemImage: "list.bullet")}
             
-            MapView()
+            MapView(selectedFeature: nil)
+                .environmentObject(apiClient)
                 .tabItem {
                     Label("", systemImage: "map")
                 }

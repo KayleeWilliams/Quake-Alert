@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ListView: View {
     @EnvironmentObject var api: APIClient
-
+    
     var body: some View {
         NavigationView {
             if let features = api.quakeSummary?.features {
@@ -26,13 +26,6 @@ struct ListView: View {
                 }
             }
         }
-    }
-    
-}
-
-struct ListView_Preview: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }
 

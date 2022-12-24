@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC41726B2957334900D186A7 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC41726A2957334900D186A7 /* TabBar.swift */; };
 		CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC012952475800F9DFFA /* earthquakeApp.swift */; };
-		CC52AC042952475800F9DFFA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC032952475800F9DFFA /* ContentView.swift */; };
+		CC52AC042952475800F9DFFA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC032952475800F9DFFA /* RootView.swift */; };
 		CC52AC062952475A00F9DFFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC52AC052952475A00F9DFFA /* Assets.xcassets */; };
 		CC52AC092952475A00F9DFFA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC52AC082952475A00F9DFFA /* Preview Assets.xcassets */; };
 		CC52AC10295247A700F9DFFA /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC0F295247A700F9DFFA /* ListView.swift */; };
@@ -18,9 +19,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC41726A2957334900D186A7 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		CC52ABFE2952475800F9DFFA /* earthquake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = earthquake.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC52AC012952475800F9DFFA /* earthquakeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = earthquakeApp.swift; sourceTree = "<group>"; };
-		CC52AC032952475800F9DFFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CC52AC032952475800F9DFFA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		CC52AC052952475A00F9DFFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC52AC082952475A00F9DFFA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CC52AC0F295247A700F9DFFA /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -40,6 +42,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC41726C2957525400D186A7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CC52AC032952475800F9DFFA /* RootView.swift */,
+				CC52AC0F295247A700F9DFFA /* ListView.swift */,
+				CC41726A2957334900D186A7 /* TabBar.swift */,
+				CC52AC112952487600F9DFFA /* MapView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		CC52ABF52952475800F9DFFA = {
 			isa = PBXGroup;
 			children = (
@@ -59,12 +72,10 @@
 		CC52AC002952475800F9DFFA /* earthquake */ = {
 			isa = PBXGroup;
 			children = (
+				CC41726C2957525400D186A7 /* Views */,
 				CC52AC012952475800F9DFFA /* earthquakeApp.swift */,
 				CC52AC132952524000F9DFFA /* APIClient.swift */,
 				CC52AC152952533200F9DFFA /* SummaryModel.swift */,
-				CC52AC032952475800F9DFFA /* ContentView.swift */,
-				CC52AC0F295247A700F9DFFA /* ListView.swift */,
-				CC52AC112952487600F9DFFA /* MapView.swift */,
 				CC52AC052952475A00F9DFFA /* Assets.xcassets */,
 				CC52AC072952475A00F9DFFA /* Preview Content */,
 			);
@@ -149,12 +160,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC52AC042952475800F9DFFA /* ContentView.swift in Sources */,
+				CC52AC042952475800F9DFFA /* RootView.swift in Sources */,
 				CC52AC122952487600F9DFFA /* MapView.swift in Sources */,
 				CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */,
 				CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */,
 				CC52AC142952524000F9DFFA /* APIClient.swift in Sources */,
 				CC52AC10295247A700F9DFFA /* ListView.swift in Sources */,
+				CC41726B2957334900D186A7 /* TabBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

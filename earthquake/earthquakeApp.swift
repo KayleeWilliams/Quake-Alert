@@ -11,7 +11,7 @@ import SwiftUI
 struct earthquakeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }

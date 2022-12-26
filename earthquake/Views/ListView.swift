@@ -10,24 +10,25 @@ import SwiftUI
 
 struct ListView: View {
     @EnvironmentObject var api: APIClient
-
+    
     var body: some View {
-        NavigationView {
-            if let features = api.quakeSummary?.features {
-                List(features.indices, id: \.self) { index in
-                    NavigationLink {
-                        MapView(selectedFeature: features[index], apiClient: api)
-                            .environmentObject(api)
-                    } label: {
-                        EarthquakeItem(feature: features[index])
-                            .environmentObject(api)
-
+            NavigationStack {
+                if let features = api.quakeSummary?.features {
+                    List(features.indices, id: \.self) { index in
+                        NavigationLink(value: index) {
+                            EarthquakeItem(feature: features[index])
+                                .environmentObject(api)
+                        }
                     }
+                    .navigationDestination(for: Int.self) { index in
+                        MapView(selectedFeature: features[index], apiClient: api)
+                        .environmentObject(api)
                 }
             }
         }
     }
 }
+
 
 struct EarthquakeItem: View {
     @EnvironmentObject var api: APIClient
@@ -78,15 +79,16 @@ struct EarthquakeItem: View {
 
             }
             Spacer()
-            HStack {
-                Text("\((feature.properties?.mag!)!)".prefix(3))
-                    .fontWeight(.bold)
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.yellow)
-                    .background(Color(.darkGray))
-                    .cornerRadius(100)
-                //                    Image(systemName: "chevron.right")
-            }
+            Magnitude(quake: feature, mapView: false)
+//            HStack {
+//                Text("\((feature.properties?.mag!)!)".prefix(3))
+//                    .fontWeight(.bold)
+//                    .frame(width: 40, height: 40)
+//                    .foregroundColor(.yellow)
+//                    .background(Color(.darkGray))
+//                    .cornerRadius(100)
+//                //                    Image(systemName: "chevron.right")
+//            }
         }
         
     }

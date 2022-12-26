@@ -19,12 +19,12 @@ struct RootView: View {
                 ListView()
                     .environmentObject(apiClient)
             } else if selectedTab == .map {
-                MapView(selectedFeature: nil, apiClient: apiClient)
-                    .environmentObject(apiClient)
+//                MapView(selectedFeature: nil, apiClient: apiClient)
+//                    .environmentObject(apiClient)
             }
             Spacer()
             TabBar(selectedTab: $selectedTab)
-        }
+        }   
         .background(Color("DarkGreen"))
     }
 }

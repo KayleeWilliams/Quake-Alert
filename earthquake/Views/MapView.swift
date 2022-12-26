@@ -11,24 +11,20 @@ import MapKit
 
 struct MapView: View {
     @ObservedObject var api: APIClient
-    @ObservedObject var selectedLocation = SelectedLocation()
-
     @State private var mapRegion: MKCoordinateRegion
+    @State var quakes: [Feature] = []
     @State var selectedFeature: Feature?
+    @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
 
     init(selectedFeature: Feature?, apiClient: APIClient) {
         self.selectedFeature = selectedFeature
         self.api = apiClient
-        
+
         var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
         if selectedFeature != nil {
             center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
         }
         self.mapRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-    }
-    
-    var quakes: [Feature]? {
-        api.quakeSummary?.features
     }
     
     func getDate(epoch: Int) -> String {
@@ -56,11 +52,12 @@ struct MapView: View {
     }
     
     func getLocation() {
-        self.api.getLocation(coords: (selectedFeature?.geometry?.coordinates)!) { city, country, code in
-        self.selectedLocation.city = city
-        self.selectedLocation.country = country
-        self.selectedLocation.countryCode = code
-        print("https://countryflagsapi.com/png/\(selectedLocation.countryCode ?? String("GB"))")
+        if selectedFeature != nil {
+            self.api.getLocation(coords: (selectedFeature?.geometry?.coordinates)!) { city, country, code in
+                self.selectedLocation.city = city
+                self.selectedLocation.country = country
+                self.selectedLocation.countryCode = code
+            }
         }
     }
     
@@ -118,10 +115,10 @@ struct MapView: View {
             }
             Spacer()
 
-            Map(coordinateRegion: $mapRegion, annotationItems: quakes ?? []) { quake in
-                //            MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
-                //                MarkerView()
-                //            }
+            Map(coordinateRegion: $mapRegion, annotationItems: quakes) { quake in
+//                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
+//                    MarkerView()
+//                }
                 MapMarker(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!))
             }
             .offset(y: 32)
@@ -131,37 +128,43 @@ struct MapView: View {
             )
         }
         .onAppear{
+            self.quakes = api.quakeSummary?.features ?? []
             getLocation()
         }
         .background(Color("DarkGreen"))
     }
     
     private var quakeDetails: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack() {
-                Image(systemName: "clock")
-                    .frame(width: 24, height: 24)
-                Text(getDate(epoch: (selectedFeature?.properties?.time)!))
-                    .font(.system(size: 18, weight: .regular))
-
-            }
-            HStack() {
-                Image(systemName: "location")
-                    .frame(width: 24, height: 24)
-                Text(formatCoords(latitude: (selectedFeature?.geometry?.coordinates![1])!, longitude: (selectedFeature?.geometry?.coordinates![0])!))
-                    .font(.system(size: 18, weight: .regular))
-
-            }
-            HStack() {
-                Image(systemName: "arrow.down.to.line")
-                    .frame(width: 24, height: 24)
-                if let depth = selectedFeature?.geometry?.coordinates![2] {
-                    Text("\(String(format: "%.1f", depth)) km depth")
-                        .font(.system(size: 18, weight: .regular))
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 2) {
+                HStack() {
+                    Image(systemName: "clock")
+                        .frame(width: 24, height: 24)
+                    Text(getDate(epoch: (selectedFeature?.properties?.time)!))
+                        .font(.system(size: 16, weight: .regular))
+                    
+                }
+                HStack() {
+                    Image(systemName: "location")
+                        .frame(width: 24, height: 24)
+                    Text(formatCoords(latitude: (selectedFeature?.geometry?.coordinates![1])!, longitude: (selectedFeature?.geometry?.coordinates![0])!))
+                        .font(.system(size: 16, weight: .regular))
+                    
+                }
+                HStack() {
+                    Image(systemName: "arrow.down.to.line")
+                        .frame(width: 24, height: 24)
+                    if let depth = selectedFeature?.geometry?.coordinates![2] {
+                        Text("\(String(format: "%.1f", depth)) km depth")
+                            .font(.system(size: 16, weight: .regular))
+                    }
                 }
             }
+            .foregroundColor(.black)
+            Spacer()
+            Magnitude(quake: (selectedFeature)!, mapView: true)
         }
-        .foregroundColor(.black)
+
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color("Cream"))
@@ -186,14 +189,8 @@ struct RoundedShape: Shape {
     }
 }
 
-class SelectedLocation: ObservableObject {
-    @Published var city: String?
-    @Published var country: String?
-    @Published var countryCode: String?
-    
-    init() {
-        city = nil
-        country = nil
-        countryCode = nil
-    }
+struct SelectedLocation {
+    var city: String?
+    var country: String?
+    var countryCode: String?
 }

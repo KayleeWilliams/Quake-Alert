@@ -180,15 +180,6 @@ struct MarkerView: View {
     }
 }
 
-struct RoundedShape: Shape {
-    let corners: UIRectCorner
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: 24, height: 24))
-        return Path(path.cgPath)
-    }
-}
-
 struct SelectedLocation {
     var city: String?
     var country: String?

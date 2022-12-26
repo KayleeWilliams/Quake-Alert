@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 
+
+
+
 struct ListView: View {
     @EnvironmentObject var api: APIClient
     
@@ -19,7 +22,13 @@ struct ListView: View {
                             EarthquakeItem(feature: features[index])
                                 .environmentObject(api)
                         }
+                        .foregroundColor(.black)
+                        .listRowBackground(Color("Cream"))
                     }
+                    .listStyle(.plain)
+                    .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
+
+                    
                     .navigationDestination(for: Int.self) { index in
                         MapView(selectedFeature: features[index], apiClient: api)
                         .environmentObject(api)
@@ -55,14 +64,6 @@ struct EarthquakeItem: View {
         
         return "\(time) (\(intervalString) ago)"
     }
-        
-//    func getCountry() {
-//        api.getLocation(coords: (feature.geometry?.coordinates)!) { res in
-//            if res != nil {
-//                self.title = "\((res?[0])!), \((res?[1])!)"
-//            }
-//        }
-//    }
     
     var body: some View {
         HStack() {
@@ -80,16 +81,8 @@ struct EarthquakeItem: View {
             }
             Spacer()
             Magnitude(quake: feature, mapView: false)
-//            HStack {
-//                Text("\((feature.properties?.mag!)!)".prefix(3))
-//                    .fontWeight(.bold)
-//                    .frame(width: 40, height: 40)
-//                    .foregroundColor(.yellow)
-//                    .background(Color(.darkGray))
-//                    .cornerRadius(100)
-//                //                    Image(systemName: "chevron.right")
-//            }
         }
         
     }
 }
+

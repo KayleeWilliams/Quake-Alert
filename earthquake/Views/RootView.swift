@@ -10,17 +10,18 @@ import SwiftUI
 
 
 struct RootView: View {
-    @StateObject var apiClient = APIClient()
+    @StateObject var api = APIClient()
     @State var selectedTab = Tabs .timeline
+    @State var quakes: [Feature] = []
 
     var body: some View {
         VStack {
             if selectedTab == .timeline {
-                ListView()
-                    .environmentObject(apiClient)
+                ListView(api: api)
             } else if selectedTab == .map {
-                MapView(selectedFeature: nil, apiClient: apiClient)
-                    .environmentObject(apiClient)
+                MapView(selectedFeature: nil, apiClient: api, quakes: $quakes)
+                    .environmentObject(api)
+                    .onAppear{self.quakes = api.quakeSummary?.features ?? []}
             }
             Spacer()
             TabBar(selectedTab: $selectedTab)

@@ -9,17 +9,49 @@ import Foundation
 import SwiftUI
 
 
+enum Rating: String, CaseIterable {
+    case all = "All"
+    case threePlus = "3.0+"
+    case fourPlus = "4.0+"
+    case fivePlus = "5.0+"
+}
 
 
 struct ListView: View {
-    @EnvironmentObject var api: APIClient
+    @State var api: APIClient
+    @State private var selectedRating = Rating.all
+    @State var quakes: [Feature] = []
+    @State var isLoading: Bool = true
     
     var body: some View {
-            NavigationStack {
-                if let features = api.quakeSummary?.features {
-                    List(features.indices, id: \.self) { index in
+        NavigationStack {
+            VStack {
+                Picker("Values", selection: $selectedRating) {
+                    ForEach(Rating.allCases, id: \.self) { rating in
+                        Text(rating.rawValue).tag(rating)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                Spacer()
+                
+                if isLoading {
+                    Text("Loading...")
+                        .onAppear{
+                            if api.quakeSummary?.features == nil {
+                                api.fetchQuakeSummary() { _ in self.isLoading.toggle() }}
+                            else {
+                                self.isLoading.toggle()
+                            }
+                        }
+                } else {
+                    let filteredQuakes = api.quakeSummary?.features?.filter { feature in
+                        if selectedRating == .all { return true } else {
+                            return feature.properties?.mag ?? 0.0 >= Double(selectedRating.rawValue.dropLast())!
+                        }
+                    }
+                    List(filteredQuakes?.indices ?? [].indices, id: \.self) { index in
                         NavigationLink(value: index) {
-                            EarthquakeItem(feature: features[index])
+                            EarthquakeItem(feature: filteredQuakes![index])
                                 .environmentObject(api)
                         }
                         .foregroundColor(.black)
@@ -27,16 +59,17 @@ struct ListView: View {
                     }
                     .listStyle(.plain)
                     .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
-
+                    .background(Color("DarkGreen"))
+                    .frame(maxHeight: 500)
                     .navigationDestination(for: Int.self) { index in
-                        MapView(selectedFeature: features[index], apiClient: api)
-                        .environmentObject(api)
+                        MapView(selectedFeature: filteredQuakes![index], apiClient: api, quakes: $quakes)
+                            .environmentObject(api)
+                    }
                 }
-            }
+            }.background(Color("DarkGreen"))
         }
     }
 }
-
 
 struct EarthquakeItem: View {
     @EnvironmentObject var api: APIClient

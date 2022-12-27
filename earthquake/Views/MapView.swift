@@ -13,15 +13,14 @@ import Map
 struct MapView: View {
     @ObservedObject var api: APIClient
     @State private var mapRegion: MKCoordinateRegion
-//    @Binding var quakes: [Feature]
+    @Binding var quakes: [Feature]
     @State var selectedFeature: Feature?
     @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
-    @State var quakes: [Feature] = []
 
-    init(selectedFeature: Feature?, apiClient: APIClient) {
+    init(selectedFeature: Feature?, apiClient: APIClient, quakes: Binding<[Feature]>) {
         self.selectedFeature = selectedFeature
         self.api = apiClient
-        self.quakes = apiClient.quakeSummary?.features ?? []
+        self._quakes = quakes
         
         var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
         if selectedFeature != nil {
@@ -113,8 +112,6 @@ struct MapView: View {
                 }
                 .zIndex(1)
                 .onAppear{getLocation()}
-                // Causes Warning: Modifying state during view update, this will cause undefined behavior.
-
             }
             Spacer()
 
@@ -131,7 +128,6 @@ struct MapView: View {
             )
         }
         .onAppear{
-//            self.quakes = api.quakeSummary?.features ?? []
             getLocation()
         }
         .background(Color("DarkGreen"))

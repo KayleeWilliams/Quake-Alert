@@ -8,18 +8,21 @@
 import Foundation
 import SwiftUI
 import MapKit
+import Map
 
 struct MapView: View {
     @ObservedObject var api: APIClient
     @State private var mapRegion: MKCoordinateRegion
-    @State var quakes: [Feature] = []
+//    @Binding var quakes: [Feature]
     @State var selectedFeature: Feature?
     @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
+    @State var quakes: [Feature] = []
 
     init(selectedFeature: Feature?, apiClient: APIClient) {
         self.selectedFeature = selectedFeature
         self.api = apiClient
-
+        self.quakes = apiClient.quakeSummary?.features ?? []
+        
         var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
         if selectedFeature != nil {
             center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
@@ -116,10 +119,10 @@ struct MapView: View {
             Spacer()
 
             Map(coordinateRegion: $mapRegion, annotationItems: quakes) { quake in
-//                MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
-//                    MarkerView()
-//                }
-                MapMarker(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!))
+                ViewMapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
+                    MarkerView(selectedFeature: $selectedFeature, quake: quake)
+                }
+//                MapMarker(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!))
             }
             .offset(y: 32)
             .overlay(
@@ -128,7 +131,7 @@ struct MapView: View {
             )
         }
         .onAppear{
-            self.quakes = api.quakeSummary?.features ?? []
+//            self.quakes = api.quakeSummary?.features ?? []
             getLocation()
         }
         .background(Color("DarkGreen"))
@@ -173,10 +176,14 @@ struct MapView: View {
 }
 
 struct MarkerView: View {
+    @Binding var selectedFeature: Feature?
+    let quake: Feature
     var body: some View {
-        Rectangle()
-            .frame(width: 10, height: 10)
-            .foregroundColor(Color.red)
+        Button(action: {print(123)}) {
+            Rectangle()
+                .frame(width: 10, height: 10)
+                .background(.green)
+        }
     }
 }
 

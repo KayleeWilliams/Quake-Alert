@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		CC011C03295A286500F8D360 /* Magnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC011C02295A286500F8D360 /* Magnitude.swift */; };
+		CC011C05295A3E1100F8D360 /* RoundedShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC011C04295A3E1100F8D360 /* RoundedShape.swift */; };
+		CC011C4C295AEDD700F8D360 /* Map in Frameworks */ = {isa = PBXBuildFile; productRef = CC011C4B295AEDD700F8D360 /* Map */; };
 		CC41726B2957334900D186A7 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC41726A2957334900D186A7 /* TabBar.swift */; };
 		CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC012952475800F9DFFA /* earthquakeApp.swift */; };
 		CC52AC042952475800F9DFFA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC032952475800F9DFFA /* RootView.swift */; };
@@ -21,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		CC011C02295A286500F8D360 /* Magnitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Magnitude.swift; sourceTree = "<group>"; };
+		CC011C04295A3E1100F8D360 /* RoundedShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedShape.swift; sourceTree = "<group>"; };
 		CC41726A2957334900D186A7 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		CC52ABFE2952475800F9DFFA /* earthquake.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = earthquake.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC52AC012952475800F9DFFA /* earthquakeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = earthquakeApp.swift; sourceTree = "<group>"; };
@@ -38,12 +41,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC011C4C295AEDD700F8D360 /* Map in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC011C06295A3E3600F8D360 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				CC011C04295A3E1100F8D360 /* RoundedShape.swift */,
+			);
+			path = Shapes;
+			sourceTree = "<group>";
+		};
 		CC41726C2957525400D186A7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +87,7 @@
 		CC52AC002952475800F9DFFA /* earthquake */ = {
 			isa = PBXGroup;
 			children = (
+				CC011C06295A3E3600F8D360 /* Shapes */,
 				CC41726C2957525400D186A7 /* Views */,
 				CC52AC012952475800F9DFFA /* earthquakeApp.swift */,
 				CC52AC132952524000F9DFFA /* APIClient.swift */,
@@ -109,6 +122,9 @@
 			dependencies = (
 			);
 			name = earthquake;
+			packageProductDependencies = (
+				CC011C4B295AEDD700F8D360 /* Map */,
+			);
 			productName = earthquake;
 			productReference = CC52ABFE2952475800F9DFFA /* earthquake.app */;
 			productType = "com.apple.product-type.application";
@@ -137,6 +153,9 @@
 				Base,
 			);
 			mainGroup = CC52ABF52952475800F9DFFA;
+			packageReferences = (
+				CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */,
+			);
 			productRefGroup = CC52ABFF2952475800F9DFFA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -165,6 +184,7 @@
 			files = (
 				CC011C03295A286500F8D360 /* Magnitude.swift in Sources */,
 				CC52AC042952475800F9DFFA /* RootView.swift in Sources */,
+				CC011C05295A3E1100F8D360 /* RoundedShape.swift in Sources */,
 				CC52AC122952487600F9DFFA /* MapView.swift in Sources */,
 				CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */,
 				CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */,
@@ -369,6 +389,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pauljohanneskraft/Map.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC011C4B295AEDD700F8D360 /* Map */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */;
+			productName = Map;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CC52ABF62952475800F9DFFA /* Project object */;
 }

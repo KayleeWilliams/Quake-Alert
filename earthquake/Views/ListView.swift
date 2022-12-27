@@ -28,7 +28,6 @@ struct ListView: View {
                     .listStyle(.plain)
                     .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
 
-                    
                     .navigationDestination(for: Int.self) { index in
                         MapView(selectedFeature: features[index], apiClient: api)
                         .environmentObject(api)
@@ -67,15 +66,16 @@ struct EarthquakeItem: View {
     
     var body: some View {
         HStack() {
-            Image("FlagPlaceholder")
-                .resizable()
-                .frame(width: 24, height: 18)
+//            Image("FlagPlaceholder")
+//                .resizable()
+//                .frame(width: 24, height: 18)
             VStack(alignment: .leading) {
-                Text(self.title)
+//                Text(self.title)
 //                    .onAppear{getCountry()}
-                    .fontWeight(.semibold)
+//                    .fontWeight(.semibold)
                 
                 Text((feature.properties?.place!)!)
+                    .font(.system(size: 16, weight: .semibold))
                 Text(getDate())
 
             }

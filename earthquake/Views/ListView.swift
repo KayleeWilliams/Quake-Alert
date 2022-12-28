@@ -18,6 +18,7 @@ enum Rating: String, CaseIterable {
 
 
 struct ListView: View {
+    @Binding var preferences: UserDefaults
     @State var api: APIClient
     @State private var selectedRating = Rating.all
     @State var quakes: [Feature] = []
@@ -65,7 +66,7 @@ struct ListView: View {
                     .background(Color("DarkGreen"))
                     .frame(maxHeight: 500)
                     .navigationDestination(for: Int.self) { index in
-                        MapView(selectedFeature: filteredQuakes![index], apiClient: api, quakes: $quakes)
+                        MapView(selectedFeature: filteredQuakes![index], apiClient: api, quakes: $quakes, preferences: .constant(preferences))
                             .environmentObject(api)
                     }
                 }

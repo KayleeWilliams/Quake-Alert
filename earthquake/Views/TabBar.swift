@@ -11,6 +11,7 @@ import SwiftUI
 enum Tabs: Int {
     case timeline = 0
     case map = 1
+    case settings = 2
 }
 
 struct TabBar: View {
@@ -37,6 +38,18 @@ struct TabBar: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .foregroundColor(selectedTab == .map ? Color("Selected") : .white)
+                    }
+                    .frame(width: geo.size.width, height: geo.size.height)
+                }
+            }
+            
+            Button(action: {selectedTab = .settings}) {
+                GeometryReader { geo in
+                    VStack(alignment: .center) {
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(selectedTab == .settings ? Color("Selected") : .white)
                     }
                     .frame(width: geo.size.width, height: geo.size.height)
                 }

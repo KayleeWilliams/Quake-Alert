@@ -12,16 +12,22 @@ import Map
 
 struct MapView: View {
     @ObservedObject var api: APIClient
-    @State private var mapRegion: MKCoordinateRegion
     @Binding var quakes: [Feature]
+    @Binding var preferences: UserDefaults
+    @State private var mapRegion: MKCoordinateRegion
+    @State var mapType: MKMapType
     @State var selectedFeature: Feature?
     @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
 
-    init(selectedFeature: Feature?, apiClient: APIClient, quakes: Binding<[Feature]>) {
+    init(selectedFeature: Feature?, apiClient: APIClient, quakes: Binding<[Feature]>, preferences: Binding<UserDefaults>) {
         self.selectedFeature = selectedFeature
         self.api = apiClient
         self._quakes = quakes
+        self._preferences = preferences
         
+        // Set map type by UserDefaults
+        self.mapType = MKMapType(rawValue: UInt(preferences.wrappedValue.integer(forKey: "mapType")))!
+
         var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
         if selectedFeature != nil {
             center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
@@ -115,7 +121,7 @@ struct MapView: View {
             }
             Spacer()
 
-            Map(coordinateRegion: $mapRegion, annotationItems: quakes) { quake in
+            Map(coordinateRegion: $mapRegion, type: mapType, annotationItems: quakes) { quake in
                 ViewMapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
                     MarkerView(selectedFeature: $selectedFeature, quake: quake)
                 }

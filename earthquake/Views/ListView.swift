@@ -38,8 +38,11 @@ struct ListView: View {
                     Text("Loading...")
                         .onAppear{
                             if api.quakeSummary?.features == nil {
-                                api.fetchQuakeSummary() { _ in self.isLoading.toggle() }}
+                                api.fetchQuakeSummary() { _ in
+                                    self.quakes = api.quakeSummary?.features ?? []
+                                    self.isLoading.toggle() }}
                             else {
+                                self.quakes = api.quakeSummary?.features ?? []
                                 self.isLoading.toggle()
                             }
                         }

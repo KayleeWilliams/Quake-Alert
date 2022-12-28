@@ -10,9 +10,17 @@ import CoreLocation
 
 class APIClient: ObservableObject {
     @Published var quakeSummary: SummaryModel?
-    
+
     init() {
-        self.fetchQuakeSummary() { result in
+        self.quakeSummary = nil
+        self.updateQuakeSummary()
+        Timer.scheduledTimer(withTimeInterval: 120, repeats: true) { timer in
+            self.updateQuakeSummary()
+        }
+    }
+    
+    func updateQuakeSummary() {
+        fetchQuakeSummary() { result in
             DispatchQueue.main.async {
                 self.quakeSummary = result!
             }

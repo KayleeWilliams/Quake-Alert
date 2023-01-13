@@ -1,7 +1,7 @@
 # Quake Alert 
 
 ## Description
-Quake Alert is an app for iOS that provides real-time information on recent earthquakes. The app features a list and map view of earthquakes, allowing users to view location, magnitude, and other details. In addition, users can customize their experience by selecting different map types and filtering earthquakes by magnitude.
+Quake Alert is a real-time earthquake monitoring app for iOS created using Swift and Swift UI to display information about earthquakes such as  magnitude, location and more. The app allows for users to customise their experience by being able to filter results by magnitude and changing the map's style. 
 
 ## Features
 - Filter earthquakes by magnitude

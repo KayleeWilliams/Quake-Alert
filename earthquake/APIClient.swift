@@ -10,13 +10,54 @@ import CoreLocation
 
 class APIClient: ObservableObject {
     @Published var quakeSummary: SummaryModel?
-
+    @Published var quakes: [Feature] = []
+    
+    private var urlSession: URLSession!
+    private var webSocketTask: URLSessionWebSocketTask!
+    private let url = URL(string: "ws://localhost:8080")!
+    
     init() {
         self.quakeSummary = nil
-        self.updateQuakeSummary()
-        Timer.scheduledTimer(withTimeInterval: 120, repeats: true) { timer in
-            self.updateQuakeSummary()
-        }
+        let task = URLSession.shared.webSocketTask(with: url)
+        task.resume()
+        self.webSocketTask = task
+        
+        // Start listening for messages
+        self.receiveMessage()
+    }
+    
+    // Recieve messages
+    private func receiveMessage() {
+        self.webSocketTask.receive(completionHandler: { result in
+            switch result {
+            case .success(let message):
+                switch message {
+                case .string(let str):
+                    let jsonData = str.data(using: .utf8)
+                    let decoder = JSONDecoder()
+                    let earthquakes = try! decoder.decode([Feature].self, from: jsonData!)
+                    DispatchQueue.main.async {
+                        earthquakes.reversed().forEach { earthquake in
+                            self.quakes.append(earthquake)
+                        }
+                    }
+                    
+                case .data(_):
+                    // Ignore data messages
+                    break
+                    
+                @unknown default:
+                    // Ignore unknown message types
+                    break
+                }
+                
+                // Receive the next message
+                self.receiveMessage()
+                
+            case .failure(let error):
+                print(error)
+            }
+        })
     }
     
     func updateQuakeSummary() {
@@ -29,12 +70,12 @@ class APIClient: ObservableObject {
     
     func getLocation(coords: [Double], completion: ((String?, String?, String?) -> Void)?) {
         let location = CLLocation(latitude: coords[1], longitude: coords[0])
-
+        
         CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
             var city: String?
             var country: String?
             var countryCode: String?
-
+            
             if let placemark = placemarks?.first {
                 city = placemark.locality
                 country = placemark.country
@@ -53,7 +94,7 @@ class APIClient: ObservableObject {
                 let result = try decoder.decode(SummaryModel.self, from: json)
                 completion(result)
             } catch { print(error) }
-        
+            
         }
     }
     

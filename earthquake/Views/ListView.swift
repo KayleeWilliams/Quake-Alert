@@ -19,10 +19,19 @@ enum Rating: String, CaseIterable {
 
 struct ListView: View {
     @Binding var preferences: UserDefaults
-    @State var api: APIClient
+    @EnvironmentObject var api: APIClient
     @State private var selectedRating = Rating.all
-    @State var quakes: [Feature] = []
-    @State var isLoading: Bool = true
+    @State var isLoading: Bool = false
+    
+    private var filteredQuakes: [Feature] {
+        api.quakes.reversed().filter { quake in
+            if selectedRating == .all {
+                return true
+            } else {
+                return quake.properties?.mag ?? 0.0 >= Double(selectedRating.rawValue.dropLast())!
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -38,36 +47,29 @@ struct ListView: View {
                 if isLoading {
                     Text("Loading...")
                         .onAppear{
-                            if api.quakeSummary?.features == nil {
-                                api.fetchQuakeSummary() { _ in
-                                    self.quakes = api.quakeSummary?.features ?? []
-                                    self.isLoading.toggle() }}
-                            else {
-                                self.quakes = api.quakeSummary?.features ?? []
+                            if api.quakes.count == 0 {
                                 self.isLoading.toggle()
                             }
                         }
+                    
                 } else {
-                    let filteredQuakes = api.quakeSummary?.features?.filter { feature in
-                        if selectedRating == .all { return true } else {
-                            return feature.properties?.mag ?? 0.0 >= Double(selectedRating.rawValue.dropLast())!
+                    Group {
+                        List(filteredQuakes.indices , id: \.self) { index in
+                            NavigationLink(value: index) {
+                                EarthquakeItem(feature: filteredQuakes[index])
+                                    .environmentObject(api)
+                            }
+                            .foregroundColor(.black)
+                            .listRowBackground(Color("Cream"))
                         }
-                    }
-                    List(filteredQuakes?.indices ?? [].indices, id: \.self) { index in
-                        NavigationLink(value: index) {
-                            EarthquakeItem(feature: filteredQuakes![index])
+                        .listStyle(.plain)
+                        .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
+                        .background(Color("DarkGreen"))
+                        .frame(maxHeight: 500)
+                        .navigationDestination(for: Int.self) { index in
+                            MapView(selectedFeature: filteredQuakes[index], preferences: .constant(preferences))
                                 .environmentObject(api)
                         }
-                        .foregroundColor(.black)
-                        .listRowBackground(Color("Cream"))
-                    }
-                    .listStyle(.plain)
-                    .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
-                    .background(Color("DarkGreen"))
-                    .frame(maxHeight: 500)
-                    .navigationDestination(for: Int.self) { index in
-                        MapView(selectedFeature: filteredQuakes![index], apiClient: api, quakes: $quakes, preferences: .constant(preferences))
-                            .environmentObject(api)
                     }
                 }
             }.background(Color("DarkGreen"))
@@ -79,8 +81,8 @@ struct EarthquakeItem: View {
     @EnvironmentObject var api: APIClient
     @State private var title: String = ""
     let feature: Feature
-
-
+    
+    
     func getDate() -> String {
         let epoch = feature.properties?.time!
         let date = Date(timeIntervalSince1970: TimeInterval(epoch!/1000))
@@ -93,7 +95,7 @@ struct EarthquakeItem: View {
         formatter.allowedUnits = [.day, .hour, .minute]
         formatter.maximumUnitCount = 1
         formatter.unitsStyle = .short
-
+        
         // Format the time interval between the date and now
         let interval = Date().timeIntervalSince(date)
         let intervalString = formatter.string(from: interval)!
@@ -103,18 +105,18 @@ struct EarthquakeItem: View {
     
     var body: some View {
         HStack() {
-//            Image("FlagPlaceholder")
-//                .resizable()
-//                .frame(width: 24, height: 18)
+            //            Image("FlagPlaceholder")
+            //                .resizable()
+            //                .frame(width: 24, height: 18)
             VStack(alignment: .leading) {
-//                Text(self.title)
-//                    .onAppear{getCountry()}
-//                    .fontWeight(.semibold)
+                //                Text(self.title)
+                //                    .onAppear{getCountry()}
+                //                    .fontWeight(.semibold)
                 
                 Text((feature.properties?.place!)!)
                     .font(.system(size: 16, weight: .semibold))
                 Text(getDate())
-
+                
             }
             Spacer()
             Magnitude(quake: feature, mapView: false)

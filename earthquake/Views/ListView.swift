@@ -63,8 +63,8 @@ struct ListView: View {
                             .listRowBackground(Color("Cream"))
                         }
                         .listStyle(.plain)
+                        .background(Color("Cream"))
                         .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
-                        .background(Color("DarkGreen"))
                         .frame(maxHeight: 500)
                         .navigationDestination(for: Int.self) { index in
                             MapView(selectedFeature: filteredQuakes[index], preferences: .constant(preferences))
@@ -80,16 +80,17 @@ struct ListView: View {
 struct EarthquakeItem: View {
     @EnvironmentObject var api: APIClient
     @State private var title: String = ""
+    @State var date: String = ""
     let feature: Feature
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    
-    func getDate() -> String {
+    // Get the time of earthquake & how long ago it was
+    func timeSinceDate() -> String {
         let epoch = feature.properties?.time!
         let date = Date(timeIntervalSince1970: TimeInterval(epoch!/1000))
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm"
         let time = timeFormatter.string(from: date)
-        
         
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.day, .hour, .minute]
@@ -105,21 +106,21 @@ struct EarthquakeItem: View {
     
     var body: some View {
         HStack() {
-            //            Image("FlagPlaceholder")
-            //                .resizable()
-            //                .frame(width: 24, height: 18)
             VStack(alignment: .leading) {
-                //                Text(self.title)
-                //                    .onAppear{getCountry()}
-                //                    .fontWeight(.semibold)
-                
-                Text((feature.properties?.place!)!)
+                Text(feature.properties!.place)
                     .font(.system(size: 16, weight: .semibold))
-                Text(getDate())
-                
+                Text(self.date)
+            }
+            .onAppear() {
+                self.date = self.timeSinceDate()
+            }
+            .onReceive(self.timer) { time in
+                // When recievedm update date
+                self.date = self.timeSinceDate()
             }
             Spacer()
             Magnitude(quake: feature, mapView: false)
+            
         }
         
     }

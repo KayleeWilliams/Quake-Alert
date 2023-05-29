@@ -15,7 +15,7 @@ struct SummaryModel: Codable {
 }
 
 // MARK: - Feature
-struct Feature: Codable, Identifiable {
+struct Feature: Codable, Identifiable, Equatable {
     let type: FeatureType?
     let properties: Properties?
     let geometry: Geometry?
@@ -23,7 +23,7 @@ struct Feature: Codable, Identifiable {
 }
 
 // MARK: - Geometry
-struct Geometry: Codable {
+struct Geometry: Codable, Equatable {
     let type: GeometryType?
     let coordinates: [Double]?
 }
@@ -33,7 +33,7 @@ enum GeometryType: String, Codable {
 }
 
 // MARK: - Properties
-struct Properties: Codable {
+struct Properties: Codable, Equatable {
     let mag: Double?
     let place: String
     let time, updated: Int?

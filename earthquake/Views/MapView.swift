@@ -41,7 +41,7 @@ struct MapView: View {
         
     }
     
-    
+    // Format the date to be displayed
     func getDate(epoch: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(epoch/1000))
         let formatter = DateFormatter()
@@ -49,6 +49,7 @@ struct MapView: View {
         return formatter.string(from: date)
     }
     
+    // Format coordinates to be diplayed
     func formatCoords(latitude: Double, longitude: Double) -> String {
         let latDegrees = Int(latitude)
         let latMinutes = Int((latitude - Double(latDegrees)) * 60)
@@ -66,6 +67,7 @@ struct MapView: View {
         return "\(latString), \(lonString)"
     }
     
+    // Get quake location
     func getLocation() {
         if selectedFeature != nil {
             self.api.getLocation(coords: (selectedFeature?.geometry?.coordinates)!) { city, country, code in
@@ -76,20 +78,20 @@ struct MapView: View {
         }
     }
     
+    // Display the map
     var body: some View {
         VStack {
             Map(coordinateRegion: $mapRegion, type: mapType, annotationItems: api.quakes, annotationContent: { quake in
                 ViewMapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
-                    MarkerView(quake: quake)
+                    MarkerView(quake: quake, selectedQuake: $selectedFeature)
                         .onTapGesture {
                             self.selectedFeature = quake
                             self.getLocation()
                         }
                 }
-                }
+            }
             )
             .ignoresSafeArea()
-//            .offset(y: self.selectedLocation.countryCode != nil ? 32 : 72)
         }
         .background(Color("DarkGreen"))
         .navigationBarBackButtonHidden(true)
@@ -125,10 +127,10 @@ struct MapView: View {
                     }
                 }
                 .foregroundColor(.white)
-                .padding(.bottom, self.selectedLocation.countryCode == nil ? 8 : 48)
+                .padding(.bottom, self.selectedLocation.countryCode == nil ? 16 : 48)
                 .frame(maxWidth: .infinity)
                 .background(Color("DarkGreen"))
-
+                
                 
                 // Display Country Flag
                 if self.selectedLocation.countryCode != nil {
@@ -200,25 +202,31 @@ struct MapView: View {
 
 struct MarkerView: View {
     let quake: Feature
-    //    @State private var isPulsating = false
-    //    @State private var scale: CGFloat = 1.0
+    @Binding var selectedQuake: Feature?
+    @State var animate = false
+    
+    // Animate the marker if selected
+    func animateQuake() {
+        if (self.selectedQuake != nil) {
+            if (self.selectedQuake == self.quake) {
+                self.animate = true
+            } else {
+                self.animate = false
+            }
+        }
+    }
     
     var body: some View {
-        //        Rectangle()
-        //            .fill(.red)
-        //            .frame(width: 12, height: 12)
-        Circle()
-            .fill(Color.orange)
-            .frame(width: 12, height: 12)
-        //           .scaleEffect(isPulsating ? 1.5 : 1)
-        //           .opacity(isPulsating ? 0.5 : 1)
-        //           .animation(
-        //               Animation.easeInOut(duration: 1)
-        //                   .repeatForever(autoreverses: true)
-        //           )
-        //           .onAppear {
-        //               self.isPulsating = true
-        //           }
+        ZStack {
+            Circle().fill(.orange.opacity(0.25)).frame(width: 48, height: 48).scaleEffect(self.animate ? 1 : 0.01)
+            Circle().fill(.orange.opacity(0.50)).frame(width: 32, height: 32).scaleEffect(self.animate ? 1 : 0.01)
+            Circle().fill(.orange).frame(width: 16, height: 16)
+        }
+        .animation(animate ? Animation.easeInOut(duration: 1.75).repeatForever(autoreverses: true) : .default, value: animate)
+        .onAppear() { self.animateQuake() }
+        .onChange(of: self.selectedQuake ) { change in
+            self.animateQuake()
+        }
     }
 }
 

@@ -8,10 +8,10 @@
 import Foundation
 
 struct SummaryModel: Codable {
-    let type: String?
-    let metadata: Metadata?
+//    let type: String?
+//    let metadata: Metadata?
     let features: [Feature]?
-    let bbox: [Double]?
+//    let bbox: [Double]?
 }
 
 // MARK: - Feature
@@ -35,10 +35,10 @@ enum GeometryType: String, Codable {
 // MARK: - Properties
 struct Properties: Codable {
     let mag: Double?
-    let place: String?
+    let place: String
     let time, updated: Int?
 //    let tz: JSONNull?
-    let url: String?
+    let url: String
     let detail: String?
     let felt: Int?
     let cdi: Double?

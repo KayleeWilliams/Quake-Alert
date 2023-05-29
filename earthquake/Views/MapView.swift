@@ -11,29 +11,36 @@ import MapKit
 import Map
 
 struct MapView: View {
-    @ObservedObject var api: APIClient
-    @Binding var quakes: [Feature]
+    @EnvironmentObject var api: APIClient
     @Binding var preferences: UserDefaults
-    @State private var mapRegion: MKCoordinateRegion
-    @State var mapType: MKMapType
-    @State var selectedFeature: Feature?
+    @State private var mapRegion: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    @State var mapType: MKMapType = MKMapType(rawValue: UInt(0))!
+    @State var selectedFeature: Feature? = nil
     @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
-
-    init(selectedFeature: Feature?, apiClient: APIClient, quakes: Binding<[Feature]>, preferences: Binding<UserDefaults>) {
-        self.selectedFeature = selectedFeature
-        self.api = apiClient
-        self._quakes = quakes
+    @Environment(\.dismiss)  private var dismiss
+    var locationManager = LocationManager()
+    
+    
+    init(selectedFeature: Feature?, preferences: Binding<UserDefaults>) {
+        // Set preferences & feature
         self._preferences = preferences
+        self.selectedFeature = selectedFeature
+        self._selectedFeature = State(initialValue: selectedFeature)//
         
-        // Set map type by UserDefaults
+        // Set Map Type
         self.mapType = MKMapType(rawValue: UInt(preferences.wrappedValue.integer(forKey: "mapType")))!
-
+        self._mapType = State(initialValue: MKMapType(rawValue: UInt(preferences.wrappedValue.integer(forKey: "mapType")))!)
+        
+        // Set map posistion
         var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
-        if selectedFeature != nil {
+        if self.selectedFeature != nil {
             center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
         }
         self.mapRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+        self._mapRegion = State(initialValue: MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)))
+        
     }
+    
     
     func getDate(epoch: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(epoch/1000))
@@ -46,16 +53,16 @@ struct MapView: View {
         let latDegrees = Int(latitude)
         let latMinutes = Int((latitude - Double(latDegrees)) * 60)
         let latSeconds = ((latitude - Double(latDegrees)) * 3600) - (Double(latMinutes) * 60)
-
+        
         let lonDegrees = Int(longitude)
         let lonMinutes = Int((longitude - Double(lonDegrees)) * 60)
         let lonSeconds = ((longitude - Double(lonDegrees)) * 3600) - (Double(lonMinutes) * 60)
-
+        
         let latString = String(format: "%d° %d' %.1f\" %@",
                                abs(latDegrees), abs(latMinutes), latSeconds, latitude >= 0 ? "N" : "S")
         let lonString = String(format: "%d° %d' %.1f\" %@",
                                abs(lonDegrees), abs(lonMinutes), lonSeconds, longitude >= 0 ? "E" : "W")
-
+        
         return "\(latString), \(lonString)"
     }
     
@@ -80,8 +87,7 @@ struct MapView: View {
                         } else if selectedLocation.country != nil {
                             Text("\((selectedLocation.country)!)")
                                 .font(.system(size: 18, weight: .bold))
-                        } else  {
-                            Text("")
+                        } else if self.selectedLocation.countryCode  == nil  {
                             Text("\((selectedFeature?.properties?.title)!)".dropFirst(8))
                                 .font(.system(size: 18, weight: .bold))
                         }
@@ -92,14 +98,17 @@ struct MapView: View {
                         }
                     }
                     .foregroundColor(.white)
-                    .offset(y: self.selectedLocation.countryCode != nil ? 0 : -32)
+                    
+                    // Display Country Flag
                     if self.selectedLocation.countryCode != nil {
-                        AsyncImage(url: URL(string: "https://countryflagsapi.com/png/\(selectedLocation.countryCode ?? String("GB"))"), content: { returnedImage in
+                        AsyncImage(url: URL(string: "https://flagcdn.com/h60/\(selectedLocation.countryCode?.lowercased() ?? String("gb")).png"), content: { returnedImage in
                             if let returnedImage = returnedImage.image {
                                 returnedImage
                                     .resizable()
                                     .cornerRadius(100)
                                     .frame(width: 48, height: 48)
+                                    .aspectRatio(1.0, contentMode: .fill)
+                                    .clipped()
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 100)
                                             .stroke(Color("DarkGreen"), lineWidth: 4)
@@ -120,23 +129,26 @@ struct MapView: View {
                 .onAppear{getLocation()}
             }
             Spacer()
-
-            Map(coordinateRegion: $mapRegion, type: mapType, annotationItems: quakes) { quake in
+            
+            Map(coordinateRegion: $mapRegion, type: mapType, annotationItems: api.quakes, annotationContent: { quake in
                 ViewMapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
-                    MarkerView(selectedFeature: $selectedFeature, quake: quake)
+                    MarkerView(quake: quake)
+                        .onTapGesture {
+                            self.selectedFeature = quake
+                            self.getLocation()
+                        }
                 }
-//                MapMarker(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!))
             }
-            .offset(y: 32)
+            )
+            .offset(y: self.selectedLocation.countryCode != nil ? 32 : 72)
             .overlay(
                 self.selectedFeature != nil ? quakeDetails: nil,
-                  alignment: .bottom
+                alignment: .bottom
             )
         }
-        .onAppear{
-            getLocation()
-        }
         .background(Color("DarkGreen"))
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: BackButton(dismiss: self.dismiss), trailing: LinkButton(quake: selectedFeature))
     }
     
     private var quakeDetails: some View {
@@ -169,7 +181,6 @@ struct MapView: View {
             Spacer()
             Magnitude(quake: (selectedFeature)!, mapView: true)
         }
-
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color("Cream"))
@@ -178,14 +189,26 @@ struct MapView: View {
 }
 
 struct MarkerView: View {
-    @Binding var selectedFeature: Feature?
     let quake: Feature
+    //    @State private var isPulsating = false
+    //    @State private var scale: CGFloat = 1.0
+    
     var body: some View {
-        Button(action: {print(123)}) {
-            Rectangle()
-                .frame(width: 10, height: 10)
-                .background(.green)
-        }
+        //        Rectangle()
+        //            .fill(.red)
+        //            .frame(width: 12, height: 12)
+        Circle()
+            .fill(Color.orange)
+            .frame(width: 12, height: 12)
+        //           .scaleEffect(isPulsating ? 1.5 : 1)
+        //           .opacity(isPulsating ? 0.5 : 1)
+        //           .animation(
+        //               Animation.easeInOut(duration: 1)
+        //                   .repeatForever(autoreverses: true)
+        //           )
+        //           .onAppear {
+        //               self.isPulsating = true
+        //           }
     }
 }
 
@@ -194,3 +217,36 @@ struct SelectedLocation {
     var country: String?
     var countryCode: String?
 }
+
+struct BackButton: View {
+    let dismiss: DismissAction
+    
+    var body: some View {
+        Button {
+            dismiss()
+        } label: {
+            HStack {
+                Image(systemName: "chevron.left")
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.white)
+            }
+        }
+    }
+}
+
+struct LinkButton: View {
+    let quake: Feature?
+    
+    var body: some View {
+        if (quake != nil) {
+            Link(destination: URL(string: (quake?.properties!.url)!)!) {
+                HStack {
+                    Image(systemName: "globe")
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.white)
+                }
+            }
+        }
+    }
+}
+

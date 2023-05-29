@@ -3,10 +3,10 @@
     {
       "identity" : "map",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pauljohanneskraft/Map.git",
+      "location" : "https://github.com/iakov-kaiumov/Map.git",
       "state" : {
         "branch" : "main",
-        "revision" : "3301884b87bc2ebf5325992e4bee8b075c1e12eb"
+        "revision" : "9d8306ad39fe0184a64cdd0e77e4aebc30091f45"
       }
     }
   ],

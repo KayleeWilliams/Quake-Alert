@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		CC011C03295A286500F8D360 /* Magnitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC011C02295A286500F8D360 /* Magnitude.swift */; };
 		CC011C05295A3E1100F8D360 /* RoundedShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC011C04295A3E1100F8D360 /* RoundedShape.swift */; };
-		CC011C4C295AEDD700F8D360 /* Map in Frameworks */ = {isa = PBXBuildFile; productRef = CC011C4B295AEDD700F8D360 /* Map */; };
 		CC41726B2957334900D186A7 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC41726A2957334900D186A7 /* TabBar.swift */; };
 		CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC012952475800F9DFFA /* earthquakeApp.swift */; };
 		CC52AC042952475800F9DFFA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC032952475800F9DFFA /* RootView.swift */; };
@@ -20,6 +19,9 @@
 		CC52AC142952524000F9DFFA /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC132952524000F9DFFA /* APIClient.swift */; };
 		CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC52AC152952533200F9DFFA /* SummaryModel.swift */; };
 		CCB4F3B5295C5EEE00E146CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4F3B4295C5EEE00E146CC /* SettingsView.swift */; };
+		CCB4F3B7295CD3FF00E146CC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4F3B6295CD3FF00E146CC /* LocationManager.swift */; };
+		CCC85D202A10F1270008337E /* MagnitudeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC85D1F2A10F1270008337E /* MagnitudeFilter.swift */; };
+		CCD37C942A24B5B000C9062C /* Map in Frameworks */ = {isa = PBXBuildFile; productRef = CCD37C932A24B5B000C9062C /* Map */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,9 @@
 		CC52AC132952524000F9DFFA /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		CC52AC152952533200F9DFFA /* SummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryModel.swift; sourceTree = "<group>"; };
 		CCB4F3B4295C5EEE00E146CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CCB4F3B6295CD3FF00E146CC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		CCB4F3B8295CE76B00E146CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CCC85D1F2A10F1270008337E /* MagnitudeFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagnitudeFilter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC011C4C295AEDD700F8D360 /* Map in Frameworks */,
+				CCD37C942A24B5B000C9062C /* Map in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +68,7 @@
 			children = (
 				CC52AC032952475800F9DFFA /* RootView.swift */,
 				CC52AC0F295247A700F9DFFA /* ListView.swift */,
+				CCC85D1F2A10F1270008337E /* MagnitudeFilter.swift */,
 				CC41726A2957334900D186A7 /* TabBar.swift */,
 				CC52AC112952487600F9DFFA /* MapView.swift */,
 				CC011C02295A286500F8D360 /* Magnitude.swift */,
@@ -90,10 +96,12 @@
 		CC52AC002952475800F9DFFA /* earthquake */ = {
 			isa = PBXGroup;
 			children = (
+				CCB4F3B8295CE76B00E146CC /* Info.plist */,
 				CC011C06295A3E3600F8D360 /* Shapes */,
 				CC41726C2957525400D186A7 /* Views */,
 				CC52AC012952475800F9DFFA /* earthquakeApp.swift */,
 				CC52AC132952524000F9DFFA /* APIClient.swift */,
+				CCB4F3B6295CD3FF00E146CC /* LocationManager.swift */,
 				CC52AC152952533200F9DFFA /* SummaryModel.swift */,
 				CC52AC052952475A00F9DFFA /* Assets.xcassets */,
 				CC52AC072952475A00F9DFFA /* Preview Content */,
@@ -126,7 +134,7 @@
 			);
 			name = earthquake;
 			packageProductDependencies = (
-				CC011C4B295AEDD700F8D360 /* Map */,
+				CCD37C932A24B5B000C9062C /* Map */,
 			);
 			productName = earthquake;
 			productReference = CC52ABFE2952475800F9DFFA /* earthquake.app */;
@@ -157,7 +165,7 @@
 			);
 			mainGroup = CC52ABF52952475800F9DFFA;
 			packageReferences = (
-				CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */,
+				CCD37C922A24B5B000C9062C /* XCRemoteSwiftPackageReference "Map" */,
 			);
 			productRefGroup = CC52ABFF2952475800F9DFFA /* Products */;
 			projectDirPath = "";
@@ -188,10 +196,12 @@
 				CC011C03295A286500F8D360 /* Magnitude.swift in Sources */,
 				CC52AC042952475800F9DFFA /* RootView.swift in Sources */,
 				CC011C05295A3E1100F8D360 /* RoundedShape.swift in Sources */,
+				CCB4F3B7295CD3FF00E146CC /* LocationManager.swift in Sources */,
 				CC52AC122952487600F9DFFA /* MapView.swift in Sources */,
 				CC52AC162952533200F9DFFA /* SummaryModel.swift in Sources */,
 				CCB4F3B5295C5EEE00E146CC /* SettingsView.swift in Sources */,
 				CC52AC022952475800F9DFFA /* earthquakeApp.swift in Sources */,
+				CCC85D202A10F1270008337E /* MagnitudeFilter.swift in Sources */,
 				CC52AC142952524000F9DFFA /* APIClient.swift in Sources */,
 				CC52AC10295247A700F9DFFA /* ListView.swift in Sources */,
 				CC41726B2957334900D186A7 /* TabBar.swift in Sources */,
@@ -251,7 +261,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -305,7 +315,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -325,6 +335,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"earthquake/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = earthquake/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -353,6 +366,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"earthquake/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = earthquake/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -395,9 +411,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */ = {
+		CCD37C922A24B5B000C9062C /* XCRemoteSwiftPackageReference "Map" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pauljohanneskraft/Map.git";
+			repositoryURL = "https://github.com/iakov-kaiumov/Map.git";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -406,9 +422,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CC011C4B295AEDD700F8D360 /* Map */ = {
+		CCD37C932A24B5B000C9062C /* Map */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CC011C4A295AEDD700F8D360 /* XCRemoteSwiftPackageReference "Map" */;
+			package = CCD37C922A24B5B000C9062C /* XCRemoteSwiftPackageReference "Map" */;
 			productName = Map;
 		};
 /* End XCSwiftPackageProductDependency section */

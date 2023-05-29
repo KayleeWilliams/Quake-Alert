@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 
-enum Rating: String, CaseIterable {
-    case all = "All"
-    case threePlus = "3.0+"
-    case fourPlus = "4.0+"
-    case fivePlus = "5.0+"
-}
+//enum Rating: String, CaseIterable {
+//    case all = "All"
+//    case threePlus = "3.0+"
+//    case fourPlus = "4.0+"
+//    case fivePlus = "5.0+"
+//}
 
 
 struct ListView: View {
@@ -22,7 +22,8 @@ struct ListView: View {
     @EnvironmentObject var api: APIClient
     @State private var selectedRating = Rating.all
     @State var isLoading: Bool = false
-    
+
+    // Filter the quakes based on magnitude
     private var filteredQuakes: [Feature] {
         api.quakes.reversed().filter { quake in
             if selectedRating == .all {
@@ -33,16 +34,20 @@ struct ListView: View {
         }
     }
     
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Picker("Values", selection: $selectedRating) {
-                    ForEach(Rating.allCases, id: \.self) { rating in
-                        Text(rating.rawValue).tag(rating)
-                    }
+            VStack(alignment: .leading) {
+                HStack() {
+                    Spacer()
+                    Text("QuakeAlert")
+                        .font(.system(size: 24, weight: .bold))
+                    Spacer()
                 }
-                .pickerStyle(SegmentedPickerStyle())
                 Spacer()
+                MagnitudeFilter(selectedRating: $selectedRating)
+                    .padding([.leading], 16)
+                    .padding([.bottom], 8)
                 
                 if isLoading {
                     Text("Loading...")
@@ -65,7 +70,7 @@ struct ListView: View {
                         .listStyle(.plain)
                         .background(Color("Cream"))
                         .clipShape(RoundedShape(corners: [.topLeft, .topRight]))
-                        .frame(maxHeight: 500)
+                        .frame(maxHeight: 560)
                         .navigationDestination(for: Int.self) { index in
                             MapView(selectedFeature: filteredQuakes[index], preferences: .constant(preferences))
                                 .environmentObject(api)

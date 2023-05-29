@@ -18,7 +18,7 @@ struct Magnitude: View {
                 .frame(width: mapView ? 48 : 40, height: mapView ? 48 : 40)
                 .font(.system(size: mapView ? 20 : 16, weight: .bold))
                 .foregroundColor(mag < 3.0 ? .white : mag < 4.0 ? .yellow : mag < 5.0 ? .orange : .red)
-                .background(Color(.darkGray))
+                .background(Color("DarkestGreen"))
                 .cornerRadius(100)
         }
     }

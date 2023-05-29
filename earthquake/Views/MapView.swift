@@ -77,59 +77,7 @@ struct MapView: View {
     }
     
     var body: some View {
-        VStack(spacing: -32) {
-            if self.selectedFeature != nil {
-                VStack {
-                    VStack(spacing: 6) {
-                        if selectedLocation.city != nil && selectedLocation.country != nil {
-                            Text("\((selectedLocation.city)!), \((selectedLocation.country)!)")
-                                .font(.system(size: 18, weight: .bold))
-                        } else if selectedLocation.country != nil {
-                            Text("\((selectedLocation.country)!)")
-                                .font(.system(size: 18, weight: .bold))
-                        } else if self.selectedLocation.countryCode  == nil  {
-                            Text("\((selectedFeature?.properties?.title)!)".dropFirst(8))
-                                .font(.system(size: 18, weight: .bold))
-                        }
-                        
-                        if selectedLocation.country != nil {
-                            Text("\((selectedFeature?.properties?.title)!)".dropFirst(8))
-                                .font(.system(size: 18, weight: .light))
-                        }
-                    }
-                    .foregroundColor(.white)
-                    
-                    // Display Country Flag
-                    if self.selectedLocation.countryCode != nil {
-                        AsyncImage(url: URL(string: "https://flagcdn.com/h60/\(selectedLocation.countryCode?.lowercased() ?? String("gb")).png"), content: { returnedImage in
-                            if let returnedImage = returnedImage.image {
-                                returnedImage
-                                    .resizable()
-                                    .cornerRadius(100)
-                                    .frame(width: 48, height: 48)
-                                    .aspectRatio(1.0, contentMode: .fill)
-                                    .clipped()
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 100)
-                                            .stroke(Color("DarkGreen"), lineWidth: 4)
-                                    )
-                            } else {
-                                Rectangle()
-                                    .cornerRadius(100)
-                                    .frame(width: 48, height: 48)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 100)
-                                            .stroke(Color("DarkGreen"), lineWidth: 4)
-                                    )
-                            }
-                        })
-                    }
-                }
-                .zIndex(1)
-                .onAppear{getLocation()}
-            }
-            Spacer()
-            
+        VStack {
             Map(coordinateRegion: $mapRegion, type: mapType, annotationItems: api.quakes, annotationContent: { quake in
                 ViewMapAnnotation(coordinate: CLLocationCoordinate2D(latitude: (quake.geometry?.coordinates![1])!, longitude: (quake.geometry?.coordinates![0])!)) {
                     MarkerView(quake: quake)
@@ -138,19 +86,81 @@ struct MapView: View {
                             self.getLocation()
                         }
                 }
-            }
+                }
             )
-            .offset(y: self.selectedLocation.countryCode != nil ? 32 : 72)
-            .overlay(
-                self.selectedFeature != nil ? quakeDetails: nil,
-                alignment: .bottom
-            )
+            .ignoresSafeArea()
+//            .offset(y: self.selectedLocation.countryCode != nil ? 32 : 72)
         }
         .background(Color("DarkGreen"))
         .navigationBarBackButtonHidden(true)
+        .overlay(self.selectedFeature != nil ? quakeDetails: nil,
+                 alignment: .bottom
+        )
+        .overlay(self.selectedFeature != nil ? quakeHeading: nil,
+                 alignment: .top
+        )
         .navigationBarItems(leading: BackButton(dismiss: self.dismiss), trailing: LinkButton(quake: selectedFeature))
     }
     
+    // Title e.g. Earthquake Location + Image
+    private var quakeHeading: some View {
+        VStack(spacing: -32) {
+            if self.selectedFeature != nil {
+                
+                VStack(spacing: 6) {
+                    if selectedLocation.city != nil && selectedLocation.country != nil {
+                        Text("\((selectedLocation.city)!), \((selectedLocation.country)!)")
+                            .font(.system(size: 18, weight: .bold))
+                    } else if selectedLocation.country != nil {
+                        Text("\((selectedLocation.country)!)")
+                            .font(.system(size: 18, weight: .bold))
+                    } else if self.selectedLocation.countryCode  == nil  {
+                        Text("\((selectedFeature?.properties?.title)!)".dropFirst(8))
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                    
+                    if selectedLocation.country != nil {
+                        Text("\((selectedFeature?.properties?.title)!)".dropFirst(8))
+                            .font(.system(size: 18, weight: .light))
+                    }
+                }
+                .foregroundColor(.white)
+                .padding(.bottom, self.selectedLocation.countryCode == nil ? 8 : 48)
+                .frame(maxWidth: .infinity)
+                .background(Color("DarkGreen"))
+
+                
+                // Display Country Flag
+                if self.selectedLocation.countryCode != nil {
+                    AsyncImage(url: URL(string: "https://flagcdn.com/h60/\(selectedLocation.countryCode?.lowercased() ?? String("gb")).png"), content: { returnedImage in
+                        if let returnedImage = returnedImage.image {
+                            returnedImage
+                                .resizable()
+                                .cornerRadius(100)
+                                .frame(width: 48, height: 48)
+                                .aspectRatio(1.0, contentMode: .fill)
+                                .clipped()
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 100)
+                                        .stroke(Color("DarkGreen"), lineWidth: 4)
+                                )
+                        } else {
+                            Rectangle()
+                                .cornerRadius(100)
+                                .frame(width: 48, height: 48)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 100)
+                                        .stroke(Color("DarkGreen"), lineWidth: 4)
+                                )
+                        }
+                    })
+                }
+            }
+        }
+        .onAppear { getLocation() }
+    }
+    
+    // Show details about the quake
     private var quakeDetails: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {

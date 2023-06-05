@@ -8,18 +8,11 @@
 import Foundation
 import SwiftUI
 
-
-//enum Rating: String, CaseIterable {
-//    case all = "All"
-//    case threePlus = "3.0+"
-//    case fourPlus = "4.0+"
-//    case fivePlus = "5.0+"
-//}
-
-
 struct ListView: View {
     @Binding var preferences: UserDefaults
     @EnvironmentObject var api: APIClient
+    @EnvironmentObject var locationManager: LocationManager
+
     @State private var selectedRating = Rating.all
     @State var isLoading: Bool = false
 

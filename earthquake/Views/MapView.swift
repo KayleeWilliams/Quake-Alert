@@ -12,13 +12,14 @@ import Map
 
 struct MapView: View {
     @EnvironmentObject var api: APIClient
+    @EnvironmentObject var locationManager: LocationManager
+    
     @Binding var preferences: UserDefaults
     @State private var mapRegion: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State var mapType: MKMapType = MKMapType(rawValue: UInt(0))!
     @State var selectedFeature: Feature? = nil
     @State var selectedLocation: SelectedLocation = SelectedLocation(city: nil, country: nil, countryCode: nil)
     @Environment(\.dismiss)  private var dismiss
-    var locationManager = LocationManager()
     
     
     init(selectedFeature: Feature?, preferences: Binding<UserDefaults>) {
@@ -32,13 +33,28 @@ struct MapView: View {
         self._mapType = State(initialValue: MKMapType(rawValue: UInt(preferences.wrappedValue.integer(forKey: "mapType")))!)
         
         // Set map posistion
-        var center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12) // FUTURE USER LOCATION
+        var center: CLLocationCoordinate2D?
         if self.selectedFeature != nil {
             center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
+        } else {
+            center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12)
         }
-        self.mapRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-        self._mapRegion = State(initialValue: MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)))
+        self.mapRegion = MKCoordinateRegion(center: center!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+        self._mapRegion = State(initialValue: MKCoordinateRegion(center: center!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)))
         
+    }
+    
+    func updateMapLocation() {
+        var center: CLLocationCoordinate2D?
+        
+        if self.selectedFeature != nil {
+            center = CLLocationCoordinate2D(latitude: (selectedFeature!.geometry?.coordinates![1])!, longitude: (selectedFeature!.geometry?.coordinates![0])!)
+        } else if locationManager.location != nil {
+            center = locationManager.location
+        } else {
+            center = CLLocationCoordinate2D(latitude: 51.5, longitude: -0.12)
+        }
+        self.mapRegion = MKCoordinateRegion(center: center!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     }
     
     // Format the date to be displayed
@@ -87,11 +103,16 @@ struct MapView: View {
                         .onTapGesture {
                             self.selectedFeature = quake
                             self.getLocation()
+                            self.updateMapLocation()
                         }
                 }
             }
             )
             .ignoresSafeArea()
+            .onAppear() {
+                self.updateMapLocation()
+            }
+            
         }
         .background(Color("DarkGreen"))
         .navigationBarBackButtonHidden(true)

@@ -10,25 +10,33 @@ import MapKit
 
 struct RootView: View {
     @StateObject var api = APIClient()
+    @StateObject var locationManager = LocationManager()
+
     @State var selectedTab = Tabs .timeline
-    @State var quakes: [Feature] = []
+        
+    @State private var location: CLLocation?
     
+
     // Initilise values for UserDefaults
     let defaultValues: [String: Any] = [
         "mapType": 0
     ]
     
     let preferences = UserDefaults.standard
-
+    
+    
     // Display view based on which tab is active from tabview
     var body: some View {
+        
         VStack {
             if selectedTab == .timeline {
-                ListView(preferences: .constant(preferences), api: api)
-            } else if selectedTab == .map {
-                MapView(selectedFeature: nil, apiClient: api, quakes: $quakes, preferences: .constant(preferences))
+                ListView(preferences: .constant(preferences))
                     .environmentObject(api)
-                    .onAppear{self.quakes = api.quakeSummary?.features ?? []}
+                    .environmentObject(locationManager)
+            } else if selectedTab == .map {
+                MapView(selectedFeature: nil, preferences: .constant(preferences))
+                    .environmentObject(api)
+                    .environmentObject(locationManager)
             } else if selectedTab == .settings {
                 SettingsView(preferences: .constant(preferences))
             }
@@ -40,6 +48,7 @@ struct RootView: View {
             // Set default values and sync
             preferences.register(defaults: defaultValues)
             preferences.synchronize()
+            locationManager.getLocation()
         }
     }
 }
